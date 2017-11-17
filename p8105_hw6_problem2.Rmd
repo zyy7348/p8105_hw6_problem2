@@ -84,7 +84,31 @@ Row {.tabset .tabset-fade}
 
 ### Days Since Prior Order in Different Aisles
 
+```{r}
+y = list(title = "Days Since Prior Order")
 
+renderPlotly({
+  instacart %>%
+    filter(days_since_prior_order > 0, 
+           department == input$dpt_choice,
+           order_hour_of_day %in% input$hour_range[1]:input$hour_range[2],
+           reordered == input$order_choice) %>%
+    plot_ly(y = ~days_since_prior_order, color = ~aisle, type = "box", colors = "Set1") %>% 
+    layout(yaxis = y)
+})
+```
 
 ### Order Rush Hour
 
+```{r}
+renderPlotly({bar_plot = 
+  instacart %>% 
+  filter(department == input$dpt_choice,
+         order_hour_of_day %in% input$hour_range[1]:input$hour_range[2],
+         reordered == input$order_choice) %>%
+  ggplot(aes(x = order_hour_of_day)) +
+  geom_bar(fill = "light blue") +
+  theme_bw()
+
+ggplotly(bar_plot)})
+```
